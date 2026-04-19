@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Headshot Factory</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: #1C1A17; min-height: 100vh; font-size: 14px; }
+
+/* LOGIN */
+#loginScreen { position: fixed; inset: 0; background: #F5F0E8; display: flex; align-items: center; justify-content: center; z-index: 999; }
+.login-box { background: #fff; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; padding: 2.5rem; width: 340px; text-align: center; }
+.login-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.05em; color: #1C1CB8; margin-bottom: 0.2rem; }
+.login-sub { font-size: 0.75rem; color: #7a6a58; margin-bottom: 1.5rem; }
+.login-box input[type=password] { width: 100%; padding: 10px 12px; border: 1px solid #E2DAC9; border-radius: 6px; font-size: 0.9rem; margin-bottom: 10px; outline: none; font-family: inherit; background: #F5F0E8; }
+.login-box input:focus { border-color: #1C1CB8; background: #fff; }
+.login-btn { width: 100%; padding: 10px; background: #1C1CB8; color: #fff; border: none; border-radius: 6px; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.06em; cursor: pointer; }
+.login-btn:hover { background: #1414a0; }
+.login-error { color: #8B1A1A; font-size: 0.75rem; margin-top: 8px; display: none; }
+
+/* LAYOUT */
+#adminApp { display: none; }
+.topbar { background: #1C1A17; padding: 0.875rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+.topbar-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.06em; color: #F5F0E8; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.pub-btn { background: #1C1CB8; color: #fff; border: none; border-radius: 5px; padding: 7px 16px; font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 0.06em; cursor: pointer; }
+.pub-btn:hover { background: #1414a0; }
+.pub-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.pub-status { font-size: 0.7rem; color: #7a6a58; }
+.pub-status.ok { color: #2d6a4f; }
+.pub-status.err { color: #8B1A1A; }
+
+.main-wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+/* TABS */
+.tabs { display: flex; gap: 0; border-bottom: 1px solid #E2DAC9; margin-bottom: 2rem; }
+.tab { padding: 0.6rem 1.25rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #7a6a58; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: inherit; transition: all 0.12s; }
+.tab.active { color: #1C1CB8; border-bottom-color: #1C1CB8; }
+
+/* STATS BAR */
+.stats-bar { display: flex; gap: 12px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.stat-card { background: #fff; border: 1px solid rgba(28,26,23,0.1); border-radius: 10px; padding: 1rem 1.25rem; min-width: 120px; }
+.stat-label { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #7a6a58; margin-bottom: 4px; }
+.stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.04em; color: #1C1A17; line-height: 1; }
+.stat-value.blue { color: #1C1CB8; }
+.stat-value.green { color: #2d6a4f; }
+.stat-value.red { color: #8B1A1A; }
+
+/* BOOKINGS TABLE */
+.bookings-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid rgba(28,26,23,0.1); }
+.bookings-table th { background: #F5F0E8; padding: 0.75rem 1rem; text-align: left; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #7a6a58; border-bottom: 1px solid #E2DAC9; }
+.bookings-table td { padding: 0.875rem 1rem; border-bottom: 1px solid #f0ebe3; font-size: 0.85rem; vertical-align: middle; }
+.bookings-table tr:last-child td { border-bottom: none; }
+.bookings-table tr:hover td { background: #faf9f7; }
+.slot-time-cell { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.04em; color: #1C1A17; white-space: nowrap; }
+.name-cell { font-weight: 500; }
+.email-cell { color: #7a6a58; font-size: 0.8rem; }
+.goals-cell { color: #7a6a58; font-size: 0.8rem; max-width: 200px; }
+.paid-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; border: none; font-family: inherit; transition: all 0.12s; }
+.paid-badge.paid { background: #e6f4ea; color: #2d6a4f; }
+.paid-badge.unpaid { background: #fce8e8; color: #8B1A1A; }
+.paid-badge:hover { filter: brightness(0.92); }
+.action-btn { padding: 4px 10px; border-radius: 5px; font-size: 0.7rem; font-weight: 600; cursor: pointer; border: 1px solid; font-family: inherit; transition: all 0.12s; background: none; }
+.cancel-btn { border-color: #E2DAC9; color: #7a6a58; }
+.cancel-btn:hover { border-color: #8B1A1A; color: #8B1A1A; background: #fce8e8; }
+.empty-state { text-align: center; padding: 3rem; color: #7a6a58; font-size: 0.9rem; }
+
+/* SLOTS GRID VIEW */
+.slots-admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.slot-admin-card { background: #fff; border: 1px solid rgba(28,26,23,0.1); border-radius: 10px; padding: 1rem; }
+.slot-admin-card.taken { border-color: #1C1CB8; background: rgba(28,28,184,0.03); }
+.slot-admin-card.open { border-color: #E2DAC9; }
+.slot-admin-time { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.04em; color: #1C1A17; margin-bottom: 4px; }
+.slot-admin-name { font-size: 0.85rem; font-weight: 500; color: #1C1A17; margin-bottom: 2px; }
+.slot-admin-email { font-size: 0.75rem; color: #7a6a58; margin-bottom: 8px; }
+.slot-open-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #E2DAC9; }
+.free-slot-btn { padding: 4px 10px; border-radius: 5px; font-size: 0.7rem; font-weight: 600; cursor: pointer; border: 1px solid #E2DAC9; color: #7a6a58; font-family: inherit; background: none; margin-top: 6px; }
+.free-slot-btn:hover { border-color: #8B1A1A; color: #8B1A1A; background: #fce8e8; }
+
+/* CONTENT EDITOR */
+.editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media(max-width: 640px) { .editor-grid { grid-template-columns: 1fr; } }
+.editor-card { background: #fff; border: 1px solid rgba(28,26,23,0.1); border-radius: 10px; padding: 1.25rem; }
+.editor-card-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #7a6a58; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f0ebe3; }
+.field-group { margin-bottom: 0.875rem; }
+.field-group label { display: block; font-size: 0.63rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: #aaa; margin-bottom: 4px; }
+.field-group input, .field-group textarea { width: 100%; padding: 8px 10px; border: 1px solid #E2DAC9; border-radius: 5px; font-size: 0.875rem; outline: none; font-family: inherit; background: #F5F0E8; color: #1C1A17; transition: border-color 0.12s; }
+.field-group input:focus, .field-group textarea:focus { border-color: #1C1CB8; background: #fff; }
+.field-group textarea { min-height: 72px; resize: vertical; line-height: 1.5; }
+
+/* GH SETTINGS */
+.gh-card { background: #fff; border: 1px solid rgba(28,26,23,0.1); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem; }
+.gh-card-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #7a6a58; margin-bottom: 1rem; }
+.gh-note { font-size: 0.75rem; color: #7a6a58; line-height: 1.55; margin-bottom: 0.75rem; }
+.gh-status { font-size: 0.72rem; padding: 5px 9px; border-radius: 4px; margin-bottom: 8px; display: none; }
+.gh-status.ok { background: #e6f4ea; color: #2d6a4f; display: block; }
+.gh-status.err { background: #fce8e8; color: #8B1A1A; display: block; }
+.gh-test-btn { padding: 7px 16px; background: #fff; border: 1px solid #E2DAC9; border-radius: 5px; font-family: inherit; font-size: 0.8rem; cursor: pointer; color: #1C1A17; }
+.gh-test-btn:hover { background: #F5F0E8; }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Headshot Factory</div>
+    <p class="login-sub">Admin Panel</p>
+    <input type="password" id="loginPw" placeholder="Password" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="login-btn" onclick="tryLogin()">Sign In</button>
+    <p class="login-error" id="loginError">Incorrect password.</p>
+  </div>
+</div>
+
+<div id="adminApp">
+  <div class="topbar">
+    <span class="topbar-title">Headshot Factory — Admin</span>
+    <div class="topbar-right">
+      <span class="pub-status" id="pubStatus"></span>
+      <button class="pub-btn" onclick="publishSite()" id="pubBtn">Publish Changes</button>
+    </div>
+  </div>
+
+  <div class="main-wrap">
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('bookings')" id="tab-bookings">Bookings</button>
+      <button class="tab" onclick="showTab('slots')" id="tab-slots">Slot View</button>
+      <button class="tab" onclick="showTab('content')" id="tab-content">Edit Content</button>
+      <button class="tab" onclick="showTab('settings')" id="tab-settings">GitHub Settings</button>
+    </div>
+    <div id="tabBody"></div>
+  </div>
+</div>
+
+<script>
+// ── AUTH ──────────────────────────────────────────────
+function tryLogin() {
+  if (document.getElementById('loginPw').value === 'amyandniki') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'block';
+    init();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+// ── STATE ─────────────────────────────────────────────
+// Bookings are stored in localStorage keyed by slot index
+// Format: { name, email, phone, goals, slot, slotEnd, paid, timestamp }
+let bookings = {};
+let CFG = null;
+let activeTab = 'bookings';
+
+const DEFAULT_CFG = {
+  date: 'Thursday, May 21st',
+  time: '9am – 5pm',
+  location: 'Hollywood Home',
+  price: '250',
+  venmoHandle: '@amy-power',
+  eyebrow: 'Amy Power & Niki Dankner present',
+  title1: 'Headshot',
+  title2: 'Factory',
+  subtitle: "We take care of the details so you can show up feeling confident and leave with images you love.\n\nLongtime friends Amy & Niki are taking our 15 years of experience in marketing and branding and bringing our expertise to you — other creative professionals looking for a new pic to throw on their site, use for speaking engagements, casting agents, LinkedIn, OnlyFans, it's up to you.\n\nImages captured by Laura Mohn, hair and makeup touchups by Mari Bowring.",
+  slotsDesc: "Each session consists of 40 minutes of hair and makeup touchups plus wardrobe direction, followed by 20 minutes of camera time. Bring your own outfits; we'll help you choose one to shoot in.",
+  notificationEmail: 'headshots@takesallkinds.com',
+  formspreeEndpoint: 'headshots@takesallkinds.com',
+  totalSlots: 16,
+  startHour: 9,
+  startMin: 0,
+};
+
+function init() {
+  bookings = JSON.parse(localStorage.getItem('hf_bookings') || '{}');
+  CFG = JSON.parse(localStorage.getItem('hf_cfg') || 'null') || Object.assign({}, DEFAULT_CFG);
+  renderTab();
+
+  // Listen for new bookings from the main page (same origin)
+  window.addEventListener('storage', e => {
+    if (e.key === 'hf_bookings') {
+      bookings = JSON.parse(e.newValue || '{}');
+      renderTab();
+    }
+  });
+}
+
+function saveBookings() {
+  localStorage.setItem('hf_bookings', JSON.stringify(bookings));
+}
+
+function saveCfg() {
+  localStorage.setItem('hf_cfg', JSON.stringify(CFG));
+}
+
+// ── SLOTS ─────────────────────────────────────────────
+function buildSlots() {
+  const slots = [];
+  let h = CFG.startHour ?? 9, m = CFG.startMin ?? 0, lunchDone = false;
+  const total = CFG.totalSlots ?? 16;
+  for (let i = 0; i < total; i++) {
+    const totalM = h * 60 + m;
+    if (!lunchDone && totalM >= 720) { lunchDone = true; const e = totalM + 30; h = Math.floor(e/60); m = e%60; }
+    const hs = fmt(h,m), pe = addM(h,m,60), ps = addM(h,m,40);
+    slots.push({ i, hmuStart: hs, photoEnd: fmt(pe.h,pe.m), photoStart: fmt(ps.h,ps.m) });
+    const nx = addM(h,m,30); h = nx.h; m = nx.m;
+  }
+  return slots;
+}
+
+function fmt(h,m){const ap=h<12?'am':'pm',hh=h>12?h-12:(h===12?12:h),mm=m===0?'':`\:${String(m).padStart(2,'0')}`;return `${hh}${mm}${ap}`;}
+function addM(h,m,d){const t=h*60+m+d;return{h:Math.floor(t/60),m:t%60};}
+
+// ── TABS ──────────────────────────────────────────────
+function showTab(t) {
+  activeTab = t;
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  renderTab();
+}
+
+function renderTab() {
+  const el = document.getElementById('tabBody');
+  if (activeTab === 'bookings') renderBookings(el);
+  else if (activeTab === 'slots') renderSlotView(el);
+  else if (activeTab === 'content') renderContent(el);
+  else if (activeTab === 'settings') renderSettings(el);
+}
+
+// ── BOOKINGS TAB ──────────────────────────────────────
+function renderBookings(el) {
+  const slots = buildSlots();
+  const booked = Object.values(bookings);
+  const paid = booked.filter(b => b.paid).length;
+  const revenue = paid * parseInt(CFG.price || 250);
+
+  let html = `<div class="stats-bar">
+    <div class="stat-card"><div class="stat-label">Total Booked</div><div class="stat-value blue">${booked.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Spots Left</div><div class="stat-value">${slots.length - booked.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Paid</div><div class="stat-value green">${paid}</div></div>
+    <div class="stat-card"><div class="stat-label">Unpaid</div><div class="stat-value red">${booked.length - paid}</div></div>
+    <div class="stat-card"><div class="stat-label">Revenue</div><div class="stat-value green">$${revenue.toLocaleString()}</div></div>
+  </div>`;
+
+  if (booked.length === 0) {
+    html += `<div class="empty-state">No bookings yet. Once people sign up they'll appear here.</div>`;
+    el.innerHTML = html;
+    return;
+  }
+
+  // Sort by slot index
+  const sorted = booked.sort((a,b) => (a.slotIndex||0) - (b.slotIndex||0));
+
+  html += `<table class="bookings-table">
+    <thead><tr>
+      <th>Slot</th><th>Name</th><th>Email</th><th>Phone</th><th>Goals</th><th>Payment</th><th>Actions</th>
+    </tr></thead><tbody>`;
+
+  sorted.forEach(b => {
+    html += `<tr>
+      <td class="slot-time-cell">${b.slot||'—'}</td>
+      <td class="name-cell">${esc(b.name||'—')}</td>
+      <td class="email-cell"><a href="mailto:${esc(b.email||'')}" style="color:#1C1CB8;text-decoration:none">${esc(b.email||'—')}</a></td>
+      <td class="email-cell">${esc(b.phone||'—')}</td>
+      <td class="goals-cell">${esc(b.goals||'—')}</td>
+      <td><button class="paid-badge ${b.paid?'paid':'unpaid'}" onclick="togglePaid('${b.slotIndex}')">
+        ${b.paid ? '✓ Paid' : '✗ Unpaid'}
+      </button></td>
+      <td><button class="action-btn cancel-btn" onclick="cancelBooking('${b.slotIndex}')">Free Slot</button></td>
+    </tr>`;
+  });
+
+  html += `</tbody></table>`;
+  el.innerHTML = html;
+}
+
+function togglePaid(slotIndex) {
+  if (!bookings[slotIndex]) return;
+  bookings[slotIndex].paid = !bookings[slotIndex].paid;
+  saveBookings();
+  renderTab();
+}
+
+function cancelBooking(slotIndex) {
+  const b = bookings[slotIndex];
+  if (!b) return;
+  if (!confirm(`Free slot for ${b.name}? This will make their slot available again.`)) return;
+  delete bookings[slotIndex];
+  saveBookings();
+  renderTab();
+}
+
+// ── SLOT VIEW TAB ─────────────────────────────────────
+function renderSlotView(el) {
+  const slots = buildSlots();
+  let html = `<div class="slots-admin-grid">`;
+  slots.forEach(slot => {
+    const b = bookings[slot.i];
+    if (b) {
+      html += `<div class="slot-admin-card taken">
+        <div class="slot-admin-time">${slot.hmuStart}–${slot.photoEnd}</div>
+        <div class="slot-admin-name">${esc(b.name)}</div>
+        <div class="slot-admin-email">${esc(b.email)}</div>
+        <button class="paid-badge ${b.paid?'paid':'unpaid'}" style="font-size:0.6rem;padding:2px 8px" onclick="togglePaid('${slot.i}')">${b.paid?'✓ Paid':'✗ Unpaid'}</button>
+        <br>
+        <button class="free-slot-btn" onclick="cancelBooking('${slot.i}')">Free this slot</button>
+      </div>`;
+    } else {
+      html += `<div class="slot-admin-card open">
+        <div class="slot-admin-time">${slot.hmuStart}–${slot.photoEnd}</div>
+        <div class="slot-open-label">Open</div>
+      </div>`;
+    }
+  });
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+// ── CONTENT EDITOR TAB ───────────────────────────────
+function renderContent(el) {
+  el.innerHTML = `
+    <div class="editor-grid">
+      <div class="editor-card">
+        <div class="editor-card-title">Event Details</div>
+        <div class="field-group"><label>Date</label><input type="text" id="c_date" value="${esc(CFG.date||'')}" oninput="updateCfg('date',this.value)"></div>
+        <div class="field-group"><label>Time</label><input type="text" id="c_time" value="${esc(CFG.time||'')}" oninput="updateCfg('time',this.value)"></div>
+        <div class="field-group"><label>Location</label><input type="text" id="c_loc" value="${esc(CFG.location||'')}" oninput="updateCfg('location',this.value)"></div>
+        <div class="field-group"><label>Price (numbers only)</label><input type="text" id="c_price" value="${esc(CFG.price||'')}" oninput="updateCfg('price',this.value)"></div>
+        <div class="field-group"><label>Venmo Handle</label><input type="text" id="c_venmo" value="${esc(CFG.venmoHandle||'')}" oninput="updateCfg('venmoHandle',this.value)"></div>
+      </div>
+      <div class="editor-card">
+        <div class="editor-card-title">Page Copy</div>
+        <div class="field-group"><label>Eyebrow Text</label><input type="text" id="c_eyebrow" value="${esc(CFG.eyebrow||'')}" oninput="updateCfg('eyebrow',this.value)"></div>
+        <div class="field-group"><label>Title Line 1</label><input type="text" id="c_title1" value="${esc(CFG.title1||'')}" oninput="updateCfg('title1',this.value)"></div>
+        <div class="field-group"><label>Title Line 2</label><input type="text" id="c_title2" value="${esc(CFG.title2||'')}" oninput="updateCfg('title2',this.value)"></div>
+        <div class="field-group"><label>Intro Blurb</label><textarea id="c_sub" oninput="updateCfg('subtitle',this.value)">${esc(CFG.subtitle||'')}</textarea></div>
+        <div class="field-group"><label>Slots Description</label><textarea id="c_sdesc" oninput="updateCfg('slotsDesc',this.value)">${esc(CFG.slotsDesc||'')}</textarea></div>
+      </div>
+    </div>
+    <p style="font-size:0.75rem;color:#7a6a58;margin-top:1rem">Changes are saved automatically. Click <strong>Publish Changes</strong> in the top bar to push to your live site.</p>
+  `;
+}
+
+function updateCfg(key, val) {
+  CFG[key] = val;
+  saveCfg();
+}
+
+// ── SETTINGS TAB ──────────────────────────────────────
+function renderSettings(el) {
+  const gh = getGh();
+  el.innerHTML = `
+    <div class="gh-card">
+      <div class="gh-card-title">GitHub Connection</div>
+      <p class="gh-note">Enter once — saved in your browser. Used to publish changes to your live site.</p>
+      <div id="gh_status" class="gh-status"></div>
+      <div class="field-group"><label>GitHub Username</label><input type="text" id="gh_user" value="${gh.user||''}" placeholder="yourusername" oninput="saveGh()"></div>
+      <div class="field-group"><label>Repository Name</label><input type="text" id="gh_repo" value="${gh.repo||''}" placeholder="headshot-workshop" oninput="saveGh()"></div>
+      <div class="field-group"><label>Personal Access Token</label><input type="password" id="gh_token" value="${gh.token||''}" placeholder="ghp_xxxxxxxxxxxx" oninput="saveGh()"></div>
+      <div class="field-group"><label>Branch</label><input type="text" id="gh_branch" value="${gh.branch||'main'}" oninput="saveGh()"></div>
+      <button class="gh-test-btn" onclick="testGh()">Test Connection</button>
+    </div>
+    <div class="gh-card">
+      <div class="gh-card-title">Add a Test Booking</div>
+      <p class="gh-note">Use this to test how the admin panel looks with bookings. Adds a fake entry you can delete.</p>
+      <button class="gh-test-btn" onclick="addTestBooking()">Add test booking</button>
+    </div>
+  `;
+}
+
+function addTestBooking() {
+  const slots = buildSlots();
+  const openSlot = slots.find(s => !bookings[s.i]);
+  if (!openSlot) { alert('All slots are taken!'); return; }
+  bookings[openSlot.i] = {
+    slotIndex: openSlot.i,
+    name: 'Jane Smith',
+    email: 'jane@example.com',
+    phone: '(213) 555-0100',
+    slot: `${openSlot.hmuStart}–${openSlot.photoEnd}`,
+    goals: 'LinkedIn headshot and personal branding',
+    paid: false,
+    timestamp: Date.now()
+  };
+  saveBookings();
+  renderTab();
+  showTab('bookings');
+}
+
+function getGh() { return JSON.parse(localStorage.getItem('gh_settings')||'{}'); }
+function saveGh() {
+  localStorage.setItem('gh_settings', JSON.stringify({
+    user: document.getElementById('gh_user')?.value||'',
+    repo: document.getElementById('gh_repo')?.value||'',
+    token: document.getElementById('gh_token')?.value||'',
+    branch: document.getElementById('gh_branch')?.value||'main',
+  }));
+}
+
+async function testGh() {
+  const gh = getGh(), el = document.getElementById('gh_status');
+  el.className = 'gh-status'; el.textContent = 'Testing…'; el.style.display = 'block';
+  try {
+    const r = await fetch(`https://api.github.com/repos/${gh.user}/${gh.repo}`, { headers: { Authorization: `token ${gh.token}`, Accept: 'application/vnd.github.v3+json' }});
+    el.className = r.ok ? 'gh-status ok' : 'gh-status err';
+    el.textContent = r.ok ? '✓ Connected!' : `✗ Error ${r.status} — check username, repo, and token.`;
+  } catch(e) { el.className = 'gh-status err'; el.textContent = '✗ ' + e.message; }
+}
+
+// ── PUBLISH ───────────────────────────────────────────
+async function publishSite() {
+  const gh = getGh();
+  if (!gh.user || !gh.repo || !gh.token) {
+    showTab('settings'); alert('Please fill in your GitHub settings first.'); return;
+  }
+  const btn = document.getElementById('pubBtn'), status = document.getElementById('pubStatus');
+  btn.disabled = true; status.className = 'pub-status'; status.textContent = 'Publishing…';
+
+  try {
+    // Generate updated index.html with current CFG baked in, and bookings baked into takenSlots
+    const takenSlots = Object.keys(bookings).map(Number);
+    const indexContent = generateIndex(takenSlots);
+    await pushFile(gh, 'index.html', indexContent);
+    // Also push admin.html
+    try { const r = await fetch('admin.html?v='+Date.now()); if(r.ok) await pushFile(gh, 'admin.html', await r.text()); } catch(e){}
+
+    status.className = 'pub-status ok';
+    status.textContent = `✓ Live in ~1 min`;
+  } catch(e) {
+    status.className = 'pub-status err'; status.textContent = '✗ ' + e.message;
+  }
+  btn.disabled = false;
+}
+
+async function pushFile(gh, path, content) {
+  let sha = null;
+  try { const r = await fetch(`https://api.github.com/repos/${gh.user}/${gh.repo}/contents/${path}?ref=${gh.branch||'main'}`, { headers: { Authorization: `token ${gh.token}`, Accept: 'application/vnd.github.v3+json' }}); if(r.ok) sha = (await r.json()).sha; } catch(e){}
+  const body = { message: `Update ${path}`, content: btoa(unescape(encodeURIComponent(content))), branch: gh.branch||'main' };
+  if (sha) body.sha = sha;
+  const r = await fetch(`https://api.github.com/repos/${gh.user}/${gh.repo}/contents/${path}`, { method: 'PUT', headers: { Authorization: `token ${gh.token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  if (!r.ok) { const err = await r.json(); throw new Error(`${path}: ${err.message}`); }
+}
+
+// ── INDEX GENERATOR ───────────────────────────────────
+// Generates a self-contained index.html with current config + bookings baked in
+function generateIndex(takenSlots) {
+  const c = CFG;
+  const subHtml = (c.subtitle||'').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Headshot Factory — Sign Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #F5F0E8; color: #1C1A17; font-family: 'DM Sans',sans-serif; font-weight: 300; min-height: 100vh; }
+.hero { background: #F5F0E8; padding: 3.5rem 2rem 2rem; text-align: center; border-bottom: 1px solid #E2DAC9; }
+.hero-eyebrow { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #1C1A17; margin-bottom: 0.75rem; }
+.hero h1 { font-family: 'Bebas Neue',sans-serif; font-size: clamp(4.5rem,14vw,9rem); line-height: 0.88; letter-spacing: 0.02em; color: #1C1CB8; }
+.hero h1 em { font-style: normal; color: #1C1CB8; }
+.hero-sub { margin-top: 1.25rem; font-size: 0.975rem; color: #7a6a58; max-width: 580px; margin-inline: auto; line-height: 1.75; font-weight: 300; }
+.hero-sub a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.hero-meta { display: flex; justify-content: center; align-items: center; margin-top: 2rem; flex-wrap: wrap; border-top: 1px solid #E2DAC9; border-bottom: 1px solid #E2DAC9; }
+.hero-meta-item { padding: 0.9rem 1.5rem; text-align: center; border-right: 1px solid #E2DAC9; flex: 1; min-width: 110px; }
+.hero-meta-item:last-child { border-right: none; }
+.hero-meta-label { font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: #7a6a58; margin-bottom: 3px; }
+.hero-meta-value { font-size: 0.875rem; font-weight: 500; color: #1C1A17; }
+.hero-meta-address { font-size: 0.62rem; color: #7a6a58; margin-top: 2px; font-weight: 300; opacity: 0.7; }
+.includes-bar { background: #1C1A17; border-bottom: 1px solid #E2DAC9; padding: 0.85rem 2rem; display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #F5F0E8; }
+.main { max-width: 820px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+.section-title { font-family: 'Bebas Neue',sans-serif; font-size: 2rem; letter-spacing: 0.05em; color: #1C1CB8; margin-bottom: 0.2rem; }
+.section-sub { font-size: 0.85rem; color: #7a6a58; margin-bottom: 1.25rem; font-weight: 300; line-height: 1.6; }
+.section-spacer { margin-top: 0; }
+.slots-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(130px,1fr)); gap: 8px; margin-bottom: 1.5rem; }
+.slot-card { background: #fff; border: 1px solid rgba(28,26,23,0.1); border-radius: 8px; padding: 0.75rem 0.875rem; cursor: pointer; transition: all 0.12s ease; }
+.slot-card:hover:not(.slot-taken):not(.slot-selected) { border-color: #1C1A17; transform: translateY(-1px); }
+.slot-card.slot-selected { border-color: #1C1CB8; border-width: 1.5px; box-shadow: inset 0 0 0 1px #1C1CB8; }
+.slot-card.slot-taken { opacity: 0.38; cursor: not-allowed; background: #EDE7DA; border-color: transparent; }
+.slot-time { font-family: 'Bebas Neue',sans-serif; font-size: 1.1rem; letter-spacing: 0.04em; color: #1C1A17; }
+.slot-status { display: inline-block; margin-top: 5px; font-size: 0.55rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #7a6a58; }
+.slot-card.slot-selected .slot-status { color: #1C1CB8; }
+.selection-summary { display: none; border-left: 2px solid #1C1CB8; padding: 0.75rem 1rem; margin-bottom: 2.5rem; background: rgba(28,28,184,0.04); border-radius: 0 6px 6px 0; }
+.selection-summary.visible { display: block; }
+.selection-summary strong { font-family: 'Bebas Neue',sans-serif; font-size: 1.1rem; letter-spacing: 0.04em; color: #1C1A17; font-weight: 400; }
+.selection-summary p { color: #7a6a58; font-size: 0.78rem; margin-top: 2px; font-weight: 300; }
+.form-section { background: #fff; border: 1px solid rgba(28,26,23,0.1); border-radius: 12px; padding: 1.75rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.form-row.full { grid-template-columns: 1fr; }
+label { display: block; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #7a6a58; margin-bottom: 5px; }
+input[type=text],input[type=email],input[type=tel] { width: 100%; padding: 10px 12px; border: 1px solid rgba(28,26,23,0.1); border-radius: 6px; font-family: 'DM Sans',sans-serif; font-size: 0.925rem; font-weight: 300; background: #F5F0E8; color: #1C1A17; outline: none; transition: border-color 0.12s; }
+input:focus { border-color: #1C1CB8; background: #fff; }
+textarea { width: 100%; padding: 10px 12px; border: 1px solid rgba(28,26,23,0.1); border-radius: 6px; font-family: 'DM Sans',sans-serif; font-size: 0.925rem; font-weight: 300; background: #F5F0E8; color: #1C1A17; outline: none; transition: border-color 0.12s; resize: vertical; min-height: 80px; line-height: 1.55; }
+textarea:focus { border-color: #1C1CB8; background: #fff; }
+textarea::placeholder,input::placeholder { color: #c0b09e; font-weight: 300; }
+.optional-tag { font-size: 0.62rem; font-weight: 400; text-transform: none; letter-spacing: 0; color: #c0b09e; margin-left: 4px; }
+@media(max-width:500px){.form-row{grid-template-columns:1fr;}}
+.payment-divider { border: none; border-top: 1px solid #E2DAC9; margin: 1.5rem 0 1.25rem; }
+.payment-inline-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #7a6a58; margin-bottom: 4px; }
+.payment-inline-amount { font-family: 'Bebas Neue',sans-serif; font-size: 2.4rem; letter-spacing: 0.04em; color: #1C1A17; line-height: 1; margin-bottom: 6px; }
+.payment-inline-note { font-size: 0.82rem; color: #7a6a58; line-height: 1.55; font-weight: 300; }
+.payment-inline-note strong { color: #1C1A17; font-weight: 500; }
+.no-slot-msg { display: none; color: #8B1A1A; font-size: 0.78rem; font-weight: 500; margin-top: 0.75rem; }
+.no-slot-msg.show { display: block; }
+.submit-btn { width: 100%; margin-top: 1.25rem; background: #1C1CB8; color: #fff; border: none; border-radius: 7px; padding: 1rem 1.25rem; font-family: 'Bebas Neue',sans-serif; font-size: 1.25rem; letter-spacing: 0.08em; cursor: pointer; transition: all 0.12s; }
+.submit-btn:hover { filter: brightness(0.88); }
+.submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.success-overlay { display: none; position: fixed; inset: 0; background: #F5F0E8; z-index: 100; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.5rem 2rem; overflow-y: auto; }
+.success-overlay.show { display: flex; }
+.success-mark { font-family: 'Bebas Neue',sans-serif; font-size: 5rem; line-height: 1; color: #1C1A17; margin-bottom: 0.25rem; }
+.success-h { font-family: 'Bebas Neue',sans-serif; font-size: 3rem; letter-spacing: 0.04em; color: #1C1A17; line-height: 1; margin-bottom: 0.5rem; }
+.success-slot { font-family: 'Bebas Neue',sans-serif; font-size: 1.6rem; letter-spacing: 0.06em; color: #1C1CB8; margin: 0.5rem 0 1rem; }
+.success-p { font-size: 0.9rem; color: #7a6a58; max-width: 360px; line-height: 1.65; font-weight: 300; }
+.success-p strong { color: #1C1A17; font-weight: 500; }
+.success-venmo { display: inline-flex; align-items: center; gap: 8px; margin-top: 1.5rem; background: #3D95CE; color: #fff; padding: 11px 26px; border-radius: 99px; font-weight: 600; font-size: 0.9rem; text-decoration: none; }
+.success-note { margin-top: 0.65rem; font-size: 0.7rem; color: rgba(90,74,58,0.45); }
+footer { text-align: center; padding: 2rem; font-size: 0.72rem; color: #7a6a58; border-top: 1px solid #E2DAC9; font-weight: 300; letter-spacing: 0.03em; opacity: 0.7; }
+</style>
+</head>
+<body>
+<div class="hero">
+  <p class="hero-eyebrow">${c.eyebrow||''}</p>
+  <h1>${c.title1||'Headshot'}<br><em>${c.title2||'Factory'}</em></h1>
+  <p class="hero-sub">${subHtml}</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="hero-meta-label">Date</div><div class="hero-meta-value">${c.date||''}</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-label">Time</div><div class="hero-meta-value">${c.time||''}</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-label">Location</div><div class="hero-meta-value">${c.location||''}</div><div class="hero-meta-address">Address shared upon confirmation</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-label">Price</div><div class="hero-meta-value">$${c.price||'250'}</div></div>
+  </div>
+</div>
+<div class="includes-bar">
+  <span>Curated sets</span>
+  <span>Coffee bar + light bites</span>
+  <span>3 retouched headshots</span>
+</div>
+<div class="main">
+  <p class="section-title">Pick a Time</p>
+  <p class="section-sub">${c.slotsDesc||''}</p>
+  <div class="slots-grid" id="slotsGrid"></div>
+  <div class="selection-summary" id="selectionSummary">
+    <strong id="summaryTime">—</strong>
+    <p id="summaryDetail">—</p>
+  </div>
+  <div class="section-spacer">
+    <p class="section-title">Your Details</p>
+    <div class="form-section">
+      <div class="form-row">
+        <div><label>First Name</label><input type="text" id="firstName" placeholder="Jane"></div>
+        <div><label>Last Name</label><input type="text" id="lastName" placeholder="Smith"></div>
+      </div>
+      <div class="form-row full"><div><label>Email</label><input type="email" id="email" placeholder="jane@example.com"></div></div>
+      <div class="form-row full"><div><label>Phone</label><input type="tel" id="phone" placeholder="(213) 555-0100"></div></div>
+      <div class="form-row full"><div>
+        <label>What are you hoping to get from your headshots? <span class="optional-tag">(optional)</span></label>
+        <textarea id="goals" placeholder="e.g. Updated LinkedIn photo, acting headshots, personal branding\u2026"></textarea>
+      </div></div>
+      <hr class="payment-divider">
+      <p class="payment-inline-label">Payment via Venmo</p>
+      <p class="payment-inline-amount">$${c.price||'250'}</p>
+      <p class="payment-inline-note">Send to <strong>${c.venmoHandle||'@amy-power'}</strong>. Add the note <strong>"Your Name - Headshot Factory"</strong> when you pay.</p>
+      <p class="no-slot-msg" id="noSlotMsg">Please select a time slot above first.</p>
+      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">Reserve My Spot + Open Venmo</button>
+    </div>
+  </div>
+</div>
+<footer>Questions? Email headshots@takesallkinds.com</footer>
+<div class="success-overlay" id="successOverlay">
+  <p class="success-mark">\u2713</p>
+  <h2 class="success-h">You're In</h2>
+  <p class="success-slot" id="successSlot">\u2014</p>
+  <p class="success-p">Your spot is held. Venmo should have opened \u2014 send <strong>$${c.price||'250'}</strong> to <strong>${c.venmoHandle||'@amy-power'}</strong> to lock it in. Once received, you'll get a confirmation with the location.</p>
+  <a class="success-venmo" href="https://venmo.com/${(c.venmoHandle||'@amy-power').replace('@','')}" target="_blank">Open Venmo \u2192 ${c.venmoHandle||'@amy-power'}</a>
+  <p class="success-note">Note: "Your Name - Headshot Factory"</p>
+</div>
+<script>
+const TAKEN = ${JSON.stringify(takenSlots)};
+let selectedSlot = null, slots = [];
+function buildSlots(){let h=${c.startHour??9},m=${c.startMin??0},ld=false;for(let i=0;i<${c.totalSlots??16};i++){const tm=h*60+m;if(!ld&&tm>=720){ld=true;const e=tm+30;h=Math.floor(e/60);m=e%60;}const hs=fmt(h,m),pe=addM(h,m,60),ps=addM(h,m,40);slots.push({i,hmuStart:hs,photoEnd:fmt(pe.h,pe.m),photoStart:fmt(ps.h,ps.m)});const nx=addM(h,m,30);h=nx.h;m=nx.m;}}
+function fmt(h,m){const ap=h<12?'am':'pm',hh=h>12?h-12:(h===12?12:h),mm=m===0?'':':'+String(m).padStart(2,'0');return hh+mm+ap;}
+function addM(h,m,d){const t=h*60+m+d;return{h:Math.floor(t/60),m:t%60};}
+function renderSlots(){const g=document.getElementById('slotsGrid');g.innerHTML='';slots.forEach((s,i)=>{const tk=TAKEN.includes(i),sel=selectedSlot===i;const c=document.createElement('div');c.className='slot-card'+(tk?' slot-taken':'')+(sel?' slot-selected':'');if(!tk)c.onclick=()=>selectSlot(i);c.innerHTML='<div class="slot-time">'+s.hmuStart+'\u2013'+s.photoEnd+'</div><div class="slot-status">'+(tk?'Reserved':'Available')+'</div>';g.appendChild(c);});}
+function selectSlot(i){selectedSlot=i;renderSlots();const s=slots[i],sum=document.getElementById('selectionSummary');sum.classList.add('visible');document.getElementById('summaryTime').textContent=s.hmuStart+' \u2013 '+s.photoEnd;document.getElementById('summaryDetail').textContent='Hair, makeup & wardrobe '+s.hmuStart+'\u2013'+s.photoStart+' \xb7 Camera time '+s.photoStart+'\u2013'+s.photoEnd;document.getElementById('noSlotMsg').classList.remove('show');}
+async function handleSubmit(){if(selectedSlot===null){document.getElementById('noSlotMsg').classList.add('show');document.getElementById('slotsGrid').scrollIntoView({behavior:'smooth',block:'start'});return;}const first=document.getElementById('firstName').value.trim(),last=document.getElementById('lastName').value.trim(),email=document.getElementById('email').value.trim(),phone=document.getElementById('phone').value.trim(),goals=document.getElementById('goals').value.trim();if(!first||!last||!email){alert('Please fill in your first name, last name, and email.');return;}const slot=slots[selectedSlot],btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Reserving\u2026';
+const note=encodeURIComponent(first+' '+last+' - Headshot Factory');window.open('https://venmo.com/${(c.venmoHandle||'amy-power').replace('@','')}?txn=pay&amount=${c.price||250}&note='+note,'_blank');
+try{await fetch('https://formspree.io/f/${c.formspreeEndpoint||c.notificationEmail||'headshots@takesallkinds.com'}',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({_subject:'New Sign-Up: '+first+' '+last+' \u2014 '+slot.hmuStart,_replyto:email,name:first+' '+last,email,phone:phone||'(not provided)',slot:slot.hmuStart+' \u2013 '+slot.photoEnd,goals:goals||'(not provided)'})});}catch(e){}
+// Save booking to localStorage so admin can see it
+const bookings=JSON.parse(localStorage.getItem('hf_bookings')||'{}');bookings[selectedSlot]={slotIndex:selectedSlot,name:first+' '+last,email,phone:phone||'',slot:slot.hmuStart+'\u2013'+slot.photoEnd,goals:goals||'',paid:false,timestamp:Date.now()};localStorage.setItem('hf_bookings',JSON.stringify(bookings));
+TAKEN.push(selectedSlot);document.getElementById('successSlot').textContent=slot.hmuStart+' \u2013 '+slot.photoEnd;document.getElementById('successOverlay').classList.add('show');renderSlots();}
+buildSlots();renderSlots();
+<\/script>
+</body>
+</html>`;
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+</script>
+</body>
+</html>
