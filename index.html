@@ -212,7 +212,7 @@ async function handleSubmit() {
   } catch(e) { console.warn('Sheet save failed:', e); }
 
   try {
-    fetch('https://formspree.io/f/headshots@takesallkinds.com', {
+    fetch('https://formspree.io/f/xpqkrlej', {
       method:'POST', headers:{'Content-Type':'application/json',Accept:'application/json'},
       body: JSON.stringify({ _subject:`New Sign-Up: ${first} ${last} — ${slot.hmuStart}`, _replyto:email, name:`${first} ${last}`, email, phone:phone||'(not provided)', slot:`${slot.hmuStart} – ${slot.photoEnd}`, goals:goals||'(not provided)' })
     });
