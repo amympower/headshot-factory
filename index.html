@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Headshot Studio — Sign Up</title>
+<title>Headshot Studio — Sign Up</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -73,6 +73,9 @@ textarea::placeholder,input::placeholder { color: #c0b09e; font-weight: 300; }
 .success-p strong { color: #1C1A17; font-weight: 500; }
 .success-venmo { display: inline-flex; align-items: center; gap: 8px; margin-top: 1.5rem; background: #3D95CE; color: #fff; padding: 11px 26px; border-radius: 99px; font-weight: 600; font-size: 0.9rem; text-decoration: none; }
 .success-note { margin-top: 0.65rem; font-size: 0.7rem; color: rgba(90,74,58,0.45); }
+.gallery-section { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem 0; }
+.gallery-eyebrow { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; color: #7a6a58; margin-bottom: 0.75rem; text-align: center; }
+.moodboard-img { width: 100%; display: block; }
 footer { text-align: center; padding: 2rem; font-size: 0.72rem; color: #7a6a58; border-top: 1px solid #E2DAC9; font-weight: 300; letter-spacing: 0.03em; opacity: 0.7; }
 </style>
 </head>
@@ -80,7 +83,7 @@ footer { text-align: center; padding: 2rem; font-size: 0.72rem; color: #7a6a58; 
 
 <div class="hero">
   <p class="hero-eyebrow">Amy Power & Niki Dankner present</p>
-  <h1><span style="font-size:0.28em;letter-spacing:0.02em;display:block;margin-bottom:0.3em;opacity:0.45;font-weight:300;font-family:'DM Sans',sans-serif;text-transform:none">the</span>Headshot<br><em>Studio</em></h1>
+  <h1>Headshot<br><em>Studio</em></h1>
   <div class="hero-sub">
     <p style="color:#1C1A17;font-weight:500;font-size:1.1rem;line-height:1.6;letter-spacing:-0.01em;text-wrap:balance;">We take care of the details so you can show up feeling confident and leave with images you love.</p>
     <p><span class="how-it-works">What it is</span>Longtime friends Amy & Niki bring 15 years of experience in marketing and creative production to a shoot designed for creative professionals like you — whether you need a new photo for your site, a speaking bio, casting, LinkedIn, or anything in between. We've got you.</p>
@@ -101,6 +104,11 @@ footer { text-align: center; padding: 2rem; font-size: 0.72rem; color: #7a6a58; 
   <span>Curated sets</span>
   <span>Coffee bar + light bites</span>
   <span>3 retouched headshots</span>
+</div>
+
+<div class="gallery-section">
+  <p class="gallery-eyebrow">Mood Board Inspiration</p>
+  <img src="moodboard.png" alt="Mood board inspiration" class="moodboard-img">
 </div>
 
 <div class="main">
@@ -127,7 +135,7 @@ footer { text-align: center; padding: 2rem; font-size: 0.72rem; color: #7a6a58; 
       <hr class="payment-divider">
       <p class="payment-inline-label">Payment via Venmo</p>
       <p class="payment-inline-amount">$250</p>
-      <p class="payment-inline-note">Send to <strong>@amy-power</strong>. Add the note <strong>"Your Name - The Headshot Studio"</strong> when you pay.</p>
+      <p class="payment-inline-note">Send to <strong>@amy-power</strong>. Add the note <strong>"Your Name - Headshot Studio"</strong> when you pay.</p>
       <p class="no-slot-msg" id="noSlotMsg">Please select a time slot above first.</p>
       <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">Reserve My Spot + Open Venmo</button>
     </div>
@@ -142,7 +150,7 @@ footer { text-align: center; padding: 2rem; font-size: 0.72rem; color: #7a6a58; 
   <p class="success-slot" id="successSlot">—</p>
   <p class="success-p">Your spot is held. Venmo should have opened — send <strong>$250</strong> to <strong>@amy-power</strong> to lock it in. Once received, you'll get a confirmation with the location.</p>
   <a class="success-venmo" href="https://venmo.com/amy-power" target="_blank">Open Venmo → @amy-power</a>
-  <p class="success-note">Note: "Your Name - The Headshot Studio"</p>
+  <p class="success-note">Note: "Your Name - Headshot Studio"</p>
 </div>
 
 <script>
