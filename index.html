@@ -3,17 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Headshot Factory — Sign Up</title>
+<title>The Headshot Studio — Sign Up</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #F5F0E8; color: #1C1A17; font-family: 'DM Sans',sans-serif; font-weight: 300; min-height: 100vh; }
 .hero { background: #F5F0E8; padding: 3.5rem 2rem 2rem; text-align: center; border-bottom: 1px solid #E2DAC9; }
 .hero-eyebrow { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #1C1A17; margin-bottom: 0.75rem; }
-.hero h1 { font-family: 'Bebas Neue',sans-serif; font-size: clamp(4.5rem,14vw,9rem); line-height: 0.88; letter-spacing: 0.02em; color: #1C1CB8; }
+.hero h1 { font-family: 'Bebas Neue',sans-serif; font-size: clamp(3.5rem,11vw,7.5rem); line-height: 0.88; letter-spacing: 0.02em; color: #1C1CB8; text-wrap: balance; }
 .hero h1 em { font-style: normal; color: #1C1CB8; }
-.hero-sub { margin-top: 1.25rem; font-size: 0.975rem; color: #7a6a58; max-width: 580px; margin-inline: auto; line-height: 1.75; font-weight: 300; }
+.hero-sub { margin-top: 1.5rem; font-size: 0.975rem; color: #7a6a58; max-width: 600px; margin-inline: auto; line-height: 1.75; font-weight: 300; }
 .hero-sub a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.hero-sub p { margin-bottom: 1.1rem; text-wrap: pretty; }
+.hero-sub p:last-child { margin-bottom: 0; }
+.hero-sub .how-it-works { font-family: 'Bebas Neue',sans-serif; font-size: 1.3rem; letter-spacing: 0.06em; color: #1C1A17; margin-bottom: 0.4rem; display: block; }
+.hero-sub .price-line { font-family: 'Bebas Neue',sans-serif; font-size: 1.3rem; letter-spacing: 0.06em; color: #1C1A17; margin-bottom: 0.4rem; display: block; }
+.hero-sub .credits { font-size: 0.975rem; color: #7a6a58; margin-top: 0.5rem; font-weight: 300; }
 .hero-meta { display: flex; justify-content: center; align-items: center; margin-top: 2rem; flex-wrap: wrap; border-top: 1px solid #E2DAC9; border-bottom: 1px solid #E2DAC9; }
 .hero-meta-item { padding: 0.9rem 1.5rem; text-align: center; border-right: 1px solid #E2DAC9; flex: 1; min-width: 110px; }
 .hero-meta-item:last-child { border-right: none; }
@@ -58,6 +63,7 @@ textarea::placeholder,input::placeholder { color: #c0b09e; font-weight: 300; }
 .submit-btn { width: 100%; margin-top: 1.25rem; background: #1C1CB8; color: #fff; border: none; border-radius: 7px; padding: 1rem 1.25rem; font-family: 'Bebas Neue',sans-serif; font-size: 1.25rem; letter-spacing: 0.08em; cursor: pointer; transition: all 0.12s; }
 .submit-btn:hover { filter: brightness(0.88); }
 .submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.loading-slots { text-align: center; padding: 2rem; font-size: 0.85rem; color: #7a6a58; font-style: italic; }
 .success-overlay { display: none; position: fixed; inset: 0; background: #F5F0E8; z-index: 100; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.5rem 2rem; overflow-y: auto; }
 .success-overlay.show { display: flex; }
 .success-mark { font-family: 'Bebas Neue',sans-serif; font-size: 5rem; line-height: 1; color: #1C1A17; margin-bottom: 0.25rem; }
@@ -71,10 +77,18 @@ footer { text-align: center; padding: 2rem; font-size: 0.72rem; color: #7a6a58; 
 </style>
 </head>
 <body>
+
 <div class="hero">
   <p class="hero-eyebrow">Amy Power & Niki Dankner present</p>
-  <h1>The Headshot<br><em>Studio</em></h1>
-  <p class="hero-sub">Longtime friends Amy & Niki bring 15 years of experience in marketing and creative production to a shoot designed for creative professionals like you - whether you need a new photo for your site, a speaking bio, casting, LinkedIn, or anything in between . <br><br>Most headshot days are stressful. This one isn't - actually, it's kind of a blast. We've designed every part of the experience to feel easy, collaborative, and genuinely fun. You get hair & makeup touch-ups, wardrobe direction, the shoot, selects chosen together on set, and 3 fully retouched editorial images. In and out in an hour - your calendar will thank you. <br><br>Images captured by Laura Mohn, hair and makeup touchups by Mari Bowring.</p>
+  <h1><span style="font-size:0.28em;letter-spacing:0.02em;display:block;margin-bottom:0.3em;opacity:0.45;font-weight:300;font-family:'DM Sans',sans-serif;text-transform:none">the</span>Headshot<br><em>Studio</em></h1>
+  <div class="hero-sub">
+    <p style="color:#1C1A17;font-weight:500;font-size:1.1rem;line-height:1.6;letter-spacing:-0.01em;text-wrap:balance;">We take care of the details so you can show up feeling confident and leave with images you love.</p>
+    <p><span class="how-it-works">What it is</span>Longtime friends Amy & Niki bring 15 years of experience in marketing and creative production to a shoot designed for creative professionals like you — whether you need a new photo for your site, a speaking bio, casting, LinkedIn, or anything in between. We've got you.</p>
+    <p><span class="how-it-works">Here's how it works</span>Each session includes 40 minutes of hair & makeup touch-ups and wardrobe direction followed by 20 minutes in front of the camera. Bring a few outfit options and we'll help you narrow it down. Twenty minutes later, you'll have images you'll actually want to use.</p>
+    <p><span class="price-line">$250, all in</span></p>
+    <p>We've designed every part of the experience to feel easy, collaborative, and genuinely fun. You get hair & makeup touch-ups, wardrobe direction, the shoot, selects chosen together on set, and 3 fully retouched editorial images. In and out in an hour.</p>
+    <p class="credits">Photography by <a href="https://www.lauramohn.com/" target="_blank">Laura Mohn</a> · Hair & makeup by <a href="https://www.instagram.com/mariwonhee/" target="_blank">Mari Bowring</a></p>
+  </div>
   <div class="hero-meta">
     <div class="hero-meta-item"><div class="hero-meta-label">Date</div><div class="hero-meta-value">Thursday, May 21st</div></div>
     <div class="hero-meta-item"><div class="hero-meta-label">Time</div><div class="hero-meta-value">9am – 5pm</div></div>
@@ -82,15 +96,17 @@ footer { text-align: center; padding: 2rem; font-size: 0.72rem; color: #7a6a58; 
     <div class="hero-meta-item"><div class="hero-meta-label">Price</div><div class="hero-meta-value">$250</div></div>
   </div>
 </div>
+
 <div class="includes-bar">
   <span>Curated sets</span>
   <span>Coffee bar + light bites</span>
   <span>3 retouched headshots</span>
 </div>
+
 <div class="main">
   <p class="section-title">Pick a Time</p>
-  <p class="section-sub">Each session includes 40 minutes of hair & makeup touchups and wardrobe direction, followed by 20 minutes in front of the camera. Bring a few outfit options and we'll help you narrow it down. Twenty minutes later, you'll have images you'll actually want to use. </p>
-  <div class="slots-grid" id="slotsGrid"></div>
+  <p class="section-sub">Each session is one hour. Arrive and we'll get started.</p>
+  <div class="slots-grid" id="slotsGrid"><div class="loading-slots">Loading available slots…</div></div>
   <div class="selection-summary" id="selectionSummary">
     <strong id="summaryTime">—</strong>
     <p id="summaryDetail">—</p>
@@ -111,36 +127,119 @@ footer { text-align: center; padding: 2rem; font-size: 0.72rem; color: #7a6a58; 
       <hr class="payment-divider">
       <p class="payment-inline-label">Payment via Venmo</p>
       <p class="payment-inline-amount">$250</p>
-      <p class="payment-inline-note">Send to <strong>@amy-power</strong>. Add the note <strong>"Your Name - Headshot Factory"</strong> when you pay.</p>
+      <p class="payment-inline-note">Send to <strong>@amy-power</strong>. Add the note <strong>"Your Name - The Headshot Studio"</strong> when you pay.</p>
       <p class="no-slot-msg" id="noSlotMsg">Please select a time slot above first.</p>
       <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">Reserve My Spot + Open Venmo</button>
     </div>
   </div>
 </div>
+
 <footer>Questions? Email headshots@takesallkinds.com</footer>
+
 <div class="success-overlay" id="successOverlay">
   <p class="success-mark">✓</p>
   <h2 class="success-h">You're In</h2>
   <p class="success-slot" id="successSlot">—</p>
   <p class="success-p">Your spot is held. Venmo should have opened — send <strong>$250</strong> to <strong>@amy-power</strong> to lock it in. Once received, you'll get a confirmation with the location.</p>
   <a class="success-venmo" href="https://venmo.com/amy-power" target="_blank">Open Venmo → @amy-power</a>
-  <p class="success-note">Note: "Your Name - Headshot Factory"</p>
+  <p class="success-note">Note: "Your Name - The Headshot Studio"</p>
 </div>
+
 <script>
-const TAKEN = [];
-let selectedSlot = null, slots = [];
-function buildSlots(){let h=9,m=0,ld=false;for(let i=0;i<16;i++){const tm=h*60+m;if(!ld&&tm>=720){ld=true;const e=tm+30;h=Math.floor(e/60);m=e%60;}const hs=fmt(h,m),pe=addM(h,m,60),ps=addM(h,m,40);slots.push({i,hmuStart:hs,photoEnd:fmt(pe.h,pe.m),photoStart:fmt(ps.h,ps.m)});const nx=addM(h,m,30);h=nx.h;m=nx.m;}}
-function fmt(h,m){const ap=h<12?'am':'pm',hh=h>12?h-12:(h===12?12:h),mm=m===0?'':':'+String(m).padStart(2,'0');return hh+mm+ap;}
-function addM(h,m,d){const t=h*60+m+d;return{h:Math.floor(t/60),m:t%60};}
-function renderSlots(){const g=document.getElementById('slotsGrid');g.innerHTML='';slots.forEach((s,i)=>{const tk=TAKEN.includes(i),sel=selectedSlot===i;const c=document.createElement('div');c.className='slot-card'+(tk?' slot-taken':'')+(sel?' slot-selected':'');if(!tk)c.onclick=()=>selectSlot(i);c.innerHTML='<div class="slot-time">'+s.hmuStart+'–'+s.photoEnd+'</div><div class="slot-status">'+(tk?'Reserved':'Available')+'</div>';g.appendChild(c);});}
-function selectSlot(i){selectedSlot=i;renderSlots();const s=slots[i],sum=document.getElementById('selectionSummary');sum.classList.add('visible');document.getElementById('summaryTime').textContent=s.hmuStart+' – '+s.photoEnd;document.getElementById('summaryDetail').textContent='Hair, makeup & wardrobe '+s.hmuStart+'–'+s.photoStart+' · Camera time '+s.photoStart+'–'+s.photoEnd;document.getElementById('noSlotMsg').classList.remove('show');}
-async function handleSubmit(){if(selectedSlot===null){document.getElementById('noSlotMsg').classList.add('show');document.getElementById('slotsGrid').scrollIntoView({behavior:'smooth',block:'start'});return;}const first=document.getElementById('firstName').value.trim(),last=document.getElementById('lastName').value.trim(),email=document.getElementById('email').value.trim(),phone=document.getElementById('phone').value.trim(),goals=document.getElementById('goals').value.trim();if(!first||!last||!email){alert('Please fill in your first name, last name, and email.');return;}const slot=slots[selectedSlot],btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Reserving…';
-const note=encodeURIComponent(first+' '+last+' - Headshot Factory');window.open('https://venmo.com/amy-power?txn=pay&amount=250&note='+note,'_blank');
-try{await fetch('https://formspree.io/f/headshots@takesallkinds.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({_subject:'New Sign-Up: '+first+' '+last+' — '+slot.hmuStart,_replyto:email,name:first+' '+last,email,phone:phone||'(not provided)',slot:slot.hmuStart+' – '+slot.photoEnd,goals:goals||'(not provided)'})});}catch(e){}
-// Save booking to localStorage so admin can see it
-const bookings=JSON.parse(localStorage.getItem('hf_bookings')||'{}');bookings[selectedSlot]={slotIndex:selectedSlot,name:first+' '+last,email,phone:phone||'',slot:slot.hmuStart+'–'+slot.photoEnd,goals:goals||'',paid:false,timestamp:Date.now()};localStorage.setItem('hf_bookings',JSON.stringify(bookings));
-TAKEN.push(selectedSlot);document.getElementById('successSlot').textContent=slot.hmuStart+' – '+slot.photoEnd;document.getElementById('successOverlay').classList.add('show');renderSlots();}
-buildSlots();renderSlots();
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw6H4dguN7B2wOdSrgGMIn41V4aWOx_wHHBJxQ9ApYlaVmI4CTZJ9TmWexKki72iRc/exec';
+const TOTAL_SLOTS = 16;
+const PRICE = 250;
+let takenSlots = [], selectedSlot = null, slots = [];
+
+function buildSlots() {
+  slots = [];
+  let h = 9, m = 0, lunchDone = false;
+  for (let i = 0; i < TOTAL_SLOTS; i++) {
+    const totalM = h * 60 + m;
+    if (!lunchDone && totalM >= 720) { lunchDone = true; const e = totalM + 30; h = Math.floor(e/60); m = e%60; }
+    const hs = fmt(h,m), pe = addM(h,m,60), ps = addM(h,m,40);
+    slots.push({ i, hmuStart: hs, photoEnd: fmt(pe.h,pe.m), photoStart: fmt(ps.h,ps.m) });
+    const nx = addM(h,m,30); h = nx.h; m = nx.m;
+  }
+}
+function fmt(h,m) { const ap=h<12?'am':'pm',hh=h>12?h-12:(h===12?12:h),mm=m===0?'':':'+String(m).padStart(2,'0'); return hh+mm+ap; }
+function addM(h,m,d) { const t=h*60+m+d; return{h:Math.floor(t/60),m:t%60}; }
+
+async function loadBookings() {
+  try {
+    const r = await fetch(SHEET_URL + '?action=getBookings&_=' + Date.now());
+    const data = await r.json();
+    takenSlots = (data.bookings || []).map(b => parseInt(b.slotIndex));
+  } catch(e) { takenSlots = []; }
+  renderSlots();
+}
+
+function renderSlots() {
+  const grid = document.getElementById('slotsGrid');
+  grid.innerHTML = '';
+  slots.forEach((slot, i) => {
+    const taken = takenSlots.includes(i), selected = selectedSlot === i;
+    const card = document.createElement('div');
+    card.className = `slot-card${taken?' slot-taken':''}${selected?' slot-selected':''}`;
+    if (!taken) card.onclick = () => selectSlot(i);
+    card.innerHTML = `<div class="slot-time">${slot.hmuStart}–${slot.photoEnd}</div><div class="slot-status">${taken?'Reserved':'Available'}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function selectSlot(i) {
+  selectedSlot = i; renderSlots();
+  const slot = slots[i], sum = document.getElementById('selectionSummary');
+  sum.classList.add('visible');
+  document.getElementById('summaryTime').textContent = `${slot.hmuStart} – ${slot.photoEnd}`;
+  document.getElementById('summaryDetail').textContent = `Hair, makeup & wardrobe direction ${slot.hmuStart}–${slot.photoStart} · Camera time ${slot.photoStart}–${slot.photoEnd}`;
+  document.getElementById('noSlotMsg').classList.remove('show');
+}
+
+async function handleSubmit() {
+  if (selectedSlot === null) { document.getElementById('noSlotMsg').classList.add('show'); document.getElementById('slotsGrid').scrollIntoView({behavior:'smooth',block:'start'}); return; }
+  const first = document.getElementById('firstName').value.trim();
+  const last = document.getElementById('lastName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const goals = document.getElementById('goals').value.trim();
+  if (!first||!last||!email) { alert('Please fill in your first name, last name, and email.'); return; }
+
+  await loadBookings();
+  if (takenSlots.includes(selectedSlot)) {
+    alert('Sorry — that slot was just taken! Please choose another time.');
+    selectedSlot = null; renderSlots(); return;
+  }
+
+  const slot = slots[selectedSlot];
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Reserving…';
+
+  const note = encodeURIComponent(`${first} ${last} - The Headshot Studio`);
+  window.open(`https://venmo.com/amy-power?txn=pay&amount=${PRICE}&note=${note}`, '_blank');
+
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action:'book', name:`${first} ${last}`, email, phone:phone||'', slot:`${slot.hmuStart}–${slot.photoEnd}`, goals:goals||'', slotIndex:selectedSlot })
+    });
+  } catch(e) { console.warn('Sheet save failed:', e); }
+
+  try {
+    fetch('https://formspree.io/f/xpqkrlej', {
+      method:'POST', headers:{'Content-Type':'application/json',Accept:'application/json'},
+      body: JSON.stringify({ _subject:`New Sign-Up: ${first} ${last} — ${slot.hmuStart}`, _replyto:email, name:`${first} ${last}`, email, phone:phone||'(not provided)', slot:`${slot.hmuStart} – ${slot.photoEnd}`, goals:goals||'(not provided)' })
+    });
+  } catch(e) {}
+
+  takenSlots.push(selectedSlot);
+  document.getElementById('successSlot').textContent = `${slot.hmuStart} – ${slot.photoEnd}`;
+  document.getElementById('successOverlay').classList.add('show');
+  renderSlots();
+}
+
+buildSlots();
+loadBookings();
 </script>
 </body>
 </html>
