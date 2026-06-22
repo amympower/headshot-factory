@@ -245,7 +245,7 @@ async function handleSubmit() {
   try {
     fetch('https://formspree.io/f/xpqkrlej', {
       method:'POST', headers:{'Content-Type':'application/json',Accept:'application/json'},
-      body: JSON.stringify({ _subject:`New Sign-Up: ${first} ${last} — ${slot.hmuStart}`, _replyto:email, name:`${first} ${last}`, email, phone:phone||'(not provided)', slot:`${slot.hmuStart} – ${slot.photoEnd}`, goals:goals||'(not provided)' })
+      body: JSON.stringify({ _subject:`New Sign-Up: ${first} ${last} — ${slot.hmuStart}`, _replyto:email, firstName:first, lastName:last, email, phone:phone||'(not provided)', slot:`${slot.hmuStart} – ${slot.photoEnd}`, goals:goals||'(not provided)' })
     });
   } catch(e) {}
 
