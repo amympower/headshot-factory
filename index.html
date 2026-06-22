@@ -238,7 +238,7 @@ async function handleSubmit() {
   try {
     await fetch(SHEET_URL, {
       method: 'POST',
-      body: JSON.stringify({ action:'book', name:`${first} ${last}`, email, phone:phone||'', slot:`${slot.hmuStart}–${slot.photoEnd}`, goals:goals||'', slotIndex:selectedSlot })
+      body: JSON.stringify({ action:'book', firstName:first, lastName:last, email, phone:phone||'', slot:`${slot.hmuStart}–${slot.photoEnd}`, goals:goals||'', slotIndex:selectedSlot })
     });
   } catch(e) { console.warn('Sheet save failed:', e); }
 
