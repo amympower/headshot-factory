@@ -80,6 +80,19 @@ textarea::placeholder,input::placeholder { color: #c0b09e; font-weight: 300; }
 .cancellation-title { font-family: 'Bebas Neue',sans-serif; font-size: 1.3rem; letter-spacing: 0.05em; color: #1C1A17; margin-bottom: 0.5rem; }
 .cancellation-text { font-size: 0.85rem; color: #7a6a58; line-height: 1.75; font-weight: 300; }
 .cancellation-text a { color: #7a6a58; text-decoration: underline; text-underline-offset: 3px; }
+.email-section { max-width: 820px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+.email-card { background: #fff; border: 1px solid rgba(28,26,23,0.1); border-radius: 12px; padding: 1.75rem; text-align: center; }
+.email-title { font-family: 'Bebas Neue',sans-serif; font-size: 1.6rem; letter-spacing: 0.05em; color: #1C1A17; margin-bottom: 0.4rem; }
+.email-sub { font-size: 0.85rem; color: #7a6a58; margin-bottom: 1.1rem; font-weight: 300; line-height: 1.6; }
+.email-form { display: flex; gap: 8px; max-width: 420px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+.email-input { flex: 1; min-width: 200px; padding: 10px 12px; border: 1px solid rgba(28,26,23,0.1); border-radius: 6px; font-family: 'DM Sans',sans-serif; font-size: 0.925rem; font-weight: 300; background: #F5F0E8; color: #1C1A17; outline: none; }
+.email-input:focus { border-color: #1C1CB8; background: #fff; }
+.email-submit-btn { background: #1C1CB8; color: #fff; border: none; border-radius: 6px; padding: 10px 22px; font-family: 'Bebas Neue',sans-serif; font-size: 1rem; letter-spacing: 0.06em; cursor: pointer; }
+.email-submit-btn:hover { filter: brightness(0.88); }
+.email-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.email-note { font-size: 0.7rem; color: #7a6a58; opacity: 0.7; margin-top: 8px; }
+.email-success { display: none; color: #1C1CB8; font-size: 0.85rem; font-weight: 500; margin-top: 10px; }
+.email-success.show { display: block; }
 footer { text-align: center; padding: 2rem; font-size: 0.72rem; color: #7a6a58; border-top: 1px solid #E2DAC9; font-weight: 300; letter-spacing: 0.03em; opacity: 0.7; }
 </style>
 </head>
@@ -151,7 +164,7 @@ footer { text-align: center; padding: 2rem; font-size: 0.72rem; color: #7a6a58; 
   <p class="cancellation-text">Life happens — we get it. That said, we're unable to offer refunds once a session is booked. You're always welcome to transfer your slot to a friend and handle the transaction between yourselves — just email us at <a href="mailto:headshots@takesallkinds.com">headshots@takesallkinds.com</a> ahead of time so we know who to expect.</p>
 </div>
 
-<footer>Questions? Email headshots@takesallkinds.com</footer>
+<div class="email-section">   <div class="email-card">     <p class="email-title">Stay in the loop</p>     <p class="email-sub">Get notified about future headshot events, early booking access, and behind-the-scenes shots.</p>     <div class="email-form">       <input type="email" id="subscribeEmail" class="email-input" placeholder="you@email.com">       <button class="email-submit-btn" id="subscribeBtn" onclick="handleSubscribe()">Sign Up</button>     </div>     <p class="email-success" id="subscribeSuccess">Thanks! You're on the list.</p>     <p class="email-note">No spam, unsubscribe anytime.</p>   </div> </div>  <footer>Questions? Email headshots@takesallkinds.com</footer>
 
 <div class="success-overlay" id="successOverlay">
   <p class="success-mark">✓</p>
@@ -253,6 +266,22 @@ async function handleSubmit() {
   document.getElementById('successSlot').textContent = `${slot.hmuStart} – ${slot.photoEnd}`;
   document.getElementById('successOverlay').classList.add('show');
   renderSlots();
+}
+
+async function handleSubscribe() {
+  const email = document.getElementById('subscribeEmail').value.trim();
+  const btn = document.getElementById('subscribeBtn');
+  if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
+  btn.disabled = true; btn.textContent = 'Signing up…';
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'subscribe', email })
+    });
+  } catch(e) { console.warn('Subscribe save failed:', e); }
+  document.getElementById('subscribeSuccess').classList.add('show');
+  document.getElementById('subscribeEmail').value = '';
+  btn.disabled = false; btn.textContent = 'Sign Up';
 }
 
 buildSlots();
